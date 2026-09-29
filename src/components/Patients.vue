@@ -1,58 +1,17 @@
 <script setup>
 import {ref} from 'vue'
+import { usePatientsStore } from '../stores/patients'
+import { useRouter } from 'vue-router'
 
+const router = useRouter();
+const patientsStore = usePatientsStore()
+const patients = patientsStore.patients
 
-const patients = [
-    {
-       id: 1,
-       firstName: "Josh" ,
-       lastName: "Sokoko" ,
-       email: "joshsokoko@example.com" ,
-       phone:"0116822892" ,
-       residence:"123 Main Street" ,
-       nationalId:"862233" ,
-       dob:"1995-04-05" ,
+const viewPatient = (patientId) => {
+    patientsStore.selectPatient(patientId)
 
-    },
-     {
-       id: 2,
-       firstName: "Amor" ,
-       lastName: "Lucy" ,
-       email: "amorlucy@example.com" ,
-       phone:"0722345654" ,
-       residence:"JK.154" ,
-       nationalId:"834890" ,
-       dob:"1996-09-08" ,
-
-    },
-     {
-       id: 3,
-       firstName: "Loro" ,
-       lastName: "Kariuki" ,
-       email: "lorokariuki@example.com" ,
-       phone:"0789006754" ,
-       residence:"123 houston" ,
-       nationalId:"860096" ,
-       dob:"2010-04-05" ,
-
-    },
-       {
-       id: 4,
-       firstName: "Karismatic" ,
-       lastName: "Kariuki" ,
-       email: "karismatickariuki@example.com" ,
-       phone:"0116822802" ,
-       residence:"123 Atlanta Street" ,
-       nationalId:"862443" ,
-       dob:"1906-04-05" ,
-
-    }
-
-
-
-
-]
-const showAddDialog = ref(false)
+    router.push({ name: 'ViewPatient', params: {id:patientId}})
+}
 
 // models
 const firstName =ref(null)
@@ -65,7 +24,6 @@ const dob =ref(null)
 
 function handleAddPatient(){
     const data ={
-        id:5,
         firstName:firstName.value,
         lastName:lastName.value,
         email:email.value,
@@ -75,7 +33,7 @@ function handleAddPatient(){
         dob:dob.value,
 
     }
-    patients.push(data)
+    patientsStore.addPatient(data)
     showAddDialog.value =false
 }
 
@@ -117,8 +75,7 @@ function handleAddPatient(){
                             <td>{{ item.NationalId }}</td>
                             <td>{{ item.dob }}</td>
                             <td>
-                                <v-btn color="primary" size="small" to="/viewpatient">
-                                    <v-icon icon="mdi-eye"></v-icon>
+                                <v-btn color="primary" size="small" @click="viewPatient(item.id)"> <v-icon icon="mdi-eye"></v-icon>
                                     View
                                 </v-btn>
                             
